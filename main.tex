@@ -73,55 +73,45 @@ This presentation is an overview of the blockchain.
 %----------------------------
 % USER CREATION
 %----------------------------
+\section{Overview}
+
+\begin{frame}
+  \frametitle{Description}
+  Blockchain is a distributed ledger, storing transactions or arbitrary data
+  that may be linked together. The most well-known use of blockchain is for
+  Bitcoin and other cryptocurrencies. These blockchains have been used to build
+  distributed applications and smart contracts, as Ethereum has done.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Distributed Ledger}
+  The distributed ledger is a public record of all data for the lifetime of the
+  database. Anyone who ``mines'' on the blockchain has access to all of these
+  records. Therefore, these records are all public. There are ways to make
+  information private on the blockchain, however, that is not the focus of this
+  presentation.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Other Distributed Databases}
+  Blockchains are distinct from other distributed databases. Each node is a
+  peer, unlike in a standard distributed database where the nodes are selected.
+  Anybody can join in as a blockchain node. This requires a different security
+  model, however, one exists that provides strong consistency.
+\end{frame}
+
 \section{Background}
-
 \begin{frame}
-  \frametitle{Description}
-  A student, in the context of this application, is a collection of courses.
-  Each course that a student has is an ordered pair:
-  \[ \color{orange2} ({\color{plum1}name}, {\color{chameleon3}grade}) \]
-
-  For example, if a student took PSY 105 and received an A, that would look like
-  this:
-
-  \[ \text{\color{orange2} ({\color{plum1}PSY 105}, {\color{chameleon3}A})} \]
-\end{frame}
-
-\begin{frame}
-  \frametitle{Description}
-  A student is composed of many courses. When we gather all the courses a
-  student has taken into a set, we have an entire student, and he or she appears
-  as follows:
-
-  \[ \left\{ \text{\color{orange2} ({\color{plum1}PSY 105}, {\color{chameleon3}A})},
-    \text{\color{orange2} ({\color{plum1}ECON 105}, {\color{chameleon3}A})},
-  \text{\color{orange2} ({\color{plum1}ENGL 120}, {\color{chameleon3}A-})},
-\text{\color{orange2} ({\color{plum1}MATH 121}, {\color{chameleon3}B+})},\ldots
-\right\}\]
-\end{frame}
-
-\begin{frame}
-  \frametitle{Database Courses}
-  Database courses are similar to student courses, except they have a credit
-  hour value instead of a grade value.
-  \[ \color{orange2} ({\color{plum1}name}, {\color{skyblue1}hours}) \]
-
-  The previous list from the student would look more like this in the database:
-
-  \[ \left\{ \text{\color{orange2} ({\color{plum1}PSY 105}, {\color{skyblue1}3})},
-      \text{\color{orange2} ({\color{plum1}ECON 105}, {\color{skyblue1}3})},
-      \text{\color{orange2} ({\color{plum1}ENGL 120}, {\color{skyblue1}3})},
-      \text{\color{orange2} ({\color{plum1}MATH 121}, {\color{skyblue1}B+})},\ldots
-  \right\}\]
-\end{frame}
-
-\begin{frame}
-  \frametitle{Degree Requirements}
-  Degree Requirements are also a tuple, and have four values:
-
-  \[ \text{\color{orange2} ({\color{plum1}name}, {\color{skyblue1}hours},
-  {\color{chameleon3}minimum grade}, {\color{chocolate1}take}, {\color{butter3}subrequirements})} \]
-
+  \frametitle{Hash Function}
+  A hash function converts an input of any size to an output of any size to an
+  output of fixed size. The input cannot be determined based on the output,
+  however, the output
+  \begin{tabular}{rl}
+    \tt \tiny ``The quick brown fox jumped over the lazy dog.'' &
+    \tt \tiny ``033939779fb22e05e0837645ec43d98c9a895c615066b30692af97b2f0bb9316'' \\
+    \tt \tiny ``The quick brown fox jumped over the lazy doggo.'' &
+    \tt \tiny ``a1a7beb72282b4b93100af7fb0b4d9db9845f09d677900439d00126a8ea9cd1a''
+  \end{tabular}
 \end{frame}
 
 \begin{frame}
