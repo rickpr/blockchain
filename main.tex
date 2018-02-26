@@ -1,0 +1,422 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {%
+
+\usetheme{UNM}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{verbatim}
+
+% Setup for the diagrams
+\usetikzlibrary{positioning,arrows,automata}
+\newcommand{\yslant}{0.5}
+\newcommand{\xslant}{-0.6}
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Blockchain]{Understanding and using the Blockchain for Credentials} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Institute for Design \& Innovation} % Your name
+\institute[UNM] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{%
+University of New Mexico \\ % Your institution for the title page
+\medskip
+\textit{informatics.unm.edu} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage% Print the title page as the first slide
+\end{frame}
+\addtobeamertemplate{frametitle}{}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north east,yshift=-1pt] at (current page.north east)
+    {\includegraphics[width = 1in]{UNMLogo.png}};
+\end{tikzpicture}}
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%------------------------------------------------
+\section{Introduction} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
+%------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Overview}
+This presentation is an overview of the blockchain.
+\end{frame}
+
+%----------------------------
+% USER CREATION
+%----------------------------
+\section{Background}
+
+\begin{frame}
+  \frametitle{Description}
+  A student, in the context of this application, is a collection of courses.
+  Each course that a student has is an ordered pair:
+  \[ \color{orange2} ({\color{plum1}name}, {\color{chameleon3}grade}) \]
+
+  For example, if a student took PSY 105 and received an A, that would look like
+  this:
+
+  \[ \text{\color{orange2} ({\color{plum1}PSY 105}, {\color{chameleon3}A})} \]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Description}
+  A student is composed of many courses. When we gather all the courses a
+  student has taken into a set, we have an entire student, and he or she appears
+  as follows:
+
+  \[ \left\{ \text{\color{orange2} ({\color{plum1}PSY 105}, {\color{chameleon3}A})},
+    \text{\color{orange2} ({\color{plum1}ECON 105}, {\color{chameleon3}A})},
+  \text{\color{orange2} ({\color{plum1}ENGL 120}, {\color{chameleon3}A-})},
+\text{\color{orange2} ({\color{plum1}MATH 121}, {\color{chameleon3}B+})},\ldots
+\right\}\]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Database Courses}
+  Database courses are similar to student courses, except they have a credit
+  hour value instead of a grade value.
+  \[ \color{orange2} ({\color{plum1}name}, {\color{skyblue1}hours}) \]
+
+  The previous list from the student would look more like this in the database:
+
+  \[ \left\{ \text{\color{orange2} ({\color{plum1}PSY 105}, {\color{skyblue1}3})},
+      \text{\color{orange2} ({\color{plum1}ECON 105}, {\color{skyblue1}3})},
+      \text{\color{orange2} ({\color{plum1}ENGL 120}, {\color{skyblue1}3})},
+      \text{\color{orange2} ({\color{plum1}MATH 121}, {\color{skyblue1}B+})},\ldots
+  \right\}\]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Degree Requirements}
+  Degree Requirements are also a tuple, and have four values:
+
+  \[ \text{\color{orange2} ({\color{plum1}name}, {\color{skyblue1}hours},
+  {\color{chameleon3}minimum grade}, {\color{chocolate1}take}, {\color{butter3}subrequirements})} \]
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Satisfying a Degree Requirement}
+
+  A degree requirement is satisfied if its {\color{chocolate1}take} and
+  {\color{skyblue1}hours} values are satisfied based on its subrequirements, which can
+  be courses or other degree requirements. The {\color{chocolate1}take} value is
+  simple, just count the subrequirements and see if they meet or exceed the
+  value.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The hours value}
+  In order to satisfy the \emph{\color{skyblue1}hours} value, the goal is to
+  reduce the subrequirements to a \emph{single element}. In order to do this, we
+  use the ${\color{chocolate2}\merge}$ operation on all the subrequirement
+  elements. First, we define the absolute value method on a requirement (or
+  course):
+
+  \[ {\color{skyblue1}|{\color{orange2}R}|} = {\color{chocolate3}\sum} \left\{
+      {\color{butter3}r}_{\color{skyblue1}hours} {\color{aluminium4}\ \mid\ } {\color{butter3}r}
+  {\color{chocolate1}\ \in}\ {\color{orange2}R} \right\} \]
+
+  Say: ``Take the sum of the \emph{\color{skyblue1}hours} value of all
+  subrequirements of $R$.''
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{The ${\color{chocolate2}\merge}$ operator}
+  This is the definition of the ${\color{chocolate2}\merge}$ operator:
+
+  \[ {\color{chameleon1}A} {\color{chocolate2}\merge} {\color{red1}B} =
+    {\color{chocolate2}(}
+    {\color{butter3}subrequirements} =
+    {\color{chameleon1}A}_{\color{butter3}sub} {\color{chocolate2}\ \cup\ }
+    {\color{red1}B}_{\color{butter3}sub}, \]
+    \[ {\color{skyblue1}hours} = {\color{skyblue2}\min}{\color{plum2}\{}
+        {\color{skyblue2}\min}{\color{chameleon3}\{}
+          {\color{skyblue1}|}{\color{chameleon1}A_{\color{butter3}sub}}
+          {\color{chocolate1}\setminus} {\color{red1}B_{\color{butter3}sub}}
+          {\color{skyblue1}|},
+        {\color{chameleon1}A}_{\color{skyblue1}hours} {\color{chameleon3}\}}
+        {\color{chocolate3}\ +\ }\] \[ {\color{skyblue2}\min}{\color{red3}\{}
+          {\color{skyblue1}|}{\color{red1}B_{\color{butter3}sub}}
+          {\color{chocolate1}\setminus}
+          {\color{chameleon1}A_{\color{butter3}sub}} {\color{skyblue1}|},
+        {\color{red1}B}_{\color{skyblue1}hours}{\color{red3}\}}
+        {\color{chocolate3}\ +\ }
+        {\color{skyblue1}|}{\color{chameleon1}A_{\color{butter3}sub}}
+        {\color{orange2}\ \cap\ }
+      {\color{red1}B_{\color{butter3}sub}}{\color{skyblue1}|},  \] \[
+        {\color{chameleon1}A}_{\color{skyblue1}hours} {\color{chocolate3}\ +\ }
+    {\color{red1}B}_{\color{skyblue1}hours}
+{\color{plum2}\}}{\color{chocolate2})} \]
+
+For the \emph{\color{skyblue1}hours} value, say: ``Take the
+{\color{skyblue2}minimum} of the {\color{chocolate3}sum}
+of the {\color{skyblue1}hours} of the {\color{butter3}subrequirements} that are
+unique to ${\color{chameleon1}A}$ (not in
+  ${\color{red1}B}$), and the \emph{\color{skyblue1}hours} value of
+  ${\color{chameleon1}A}$. Add this
+  to the {\color{chocolate3}sum} of the {\color{skyblue1}hours} of the
+  {\color{butter3}subrequirements} that are unique to ${\color{red1}B}$ (not in
+  ${\color{chameleon1}A}$), or ${\color{red1}B}$'s \emph{\color{skyblue1}}
+  value, whichever is {\color{skyblue2}less}. Add this result to the {\color{chocolate3}sum} of
+  the {\color{skyblue1}hours} in the {\color{orange2}intersection} of ${\color{chameleon1}A}$ and
+  ${\color{red1}B}$. Take this result, or the {\color{chocolate3}sum} of
+  ${\color{chameleon1}A}$'s \emph{\color{skyblue1}hours} value, and
+  ${\color{red1}B}$'s \emph{\color{skyblue1}hours} value,
+  whichever is {\color{skyblue2}less}.''
+
+\end{frame}
+
+\begin{frame}
+  \begin{figure}[h]
+    \centering
+    \resizebox{\linewidth}{!}{%
+      \begin{tikzpicture}
+        \node[state, minimum size=1cm, draw=plum2] (A) {};
+        \reqnode
+        A{\color{plum2}D}{\color{chocolate1}T}{\color{skyblue1}{\color{skyblue1}H}}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below right of=A, node distance=2cm,
+        xshift=2cm, draw=butter3] (B) {};
+        \reqnode B{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below right of=B, node distance=2cm,
+        xshift=0.5cm, draw=butter3] (C) {};
+        \reqnode C{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below left of=B, node distance=2cm,
+        draw=butter3] (D) {};
+        \reqnode D{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below left of=A, node distance=2cm,
+        xshift=-2cm, draw=butter3] (E) {};
+        \reqnode E{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below left of=E, node distance=2cm,
+        xshift=-0.5cm, draw=butter3] (F) {};
+        \reqnode F{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below right of=E, node distance=2cm,
+        draw=butter3] (G) {};
+        \reqnode G{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below left of=F, node distance=1.5cm,
+        draw=red2] (H) {};
+        \coursenode H{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=F, node distance=1.5cm,
+        draw=red2] (I) {};
+        \coursenode I{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=G, node distance=1.5cm,
+        draw=red2] (J) {};
+        \coursenode J{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=G, node distance=1.5cm,
+        draw=red2] (K) {};
+        \coursenode K{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=C, node distance=1.5cm,
+        draw=red2] (L) {};
+        \coursenode L{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=C, node distance=1.5cm,
+        draw=red2] (M) {};
+        \coursenode M{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=D, node distance=1.5cm,
+        draw=red2] (N) {};
+        \coursenode N{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=D, node distance=1.5cm,
+        draw=red2] (O) {};
+        \coursenode O{\color{red2}C}{\color{skyblue1}H}
+        \node[right of=F, node distance=1.65cm] {\color{chocolate2}\Huge$\merge$};
+        \node[left of=C, node distance=1.65cm] {\color{chocolate2}\huge$\merge$};
+
+        \path (A) edge (B)
+        edge (E)
+        (B) edge (C) edge (D)
+        (E) edge (F) edge (G)
+        (C) edge (L) edge (M)
+        (D) edge (N) edge (O)
+        (F) edge (H) edge (I)
+        (G) edge (J) edge (K);
+      \end{tikzpicture}
+    }
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \resizebox{\linewidth}{!}{%
+      \begin{tikzpicture}
+        \node[state, minimum size=1cm, draw=plum2] (A) {};
+        \reqnode
+        A{\color{plum2}D}{\color{chocolate1}T}{\color{skyblue1}{\color{skyblue1}H}}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below right of=A, node distance=2cm,
+        xshift=2cm, draw=butter3] (B) {};
+        \reqnode B{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below left of=A, node distance=2cm,
+        xshift=-2cm, draw=butter3] (E) {};
+        \reqnode E{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below left of=F, node distance=1.5cm,
+        draw=red2] (H) {};
+        \coursenode H{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=F, node distance=1.5cm,
+        draw=red2] (I) {};
+        \coursenode I{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=G, node distance=1.5cm,
+        draw=red2] (J) {};
+        \coursenode J{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=G, node distance=1.5cm,
+        draw=red2] (K) {};
+        \coursenode K{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=C, node distance=1.5cm,
+        draw=red2] (L) {};
+        \coursenode L{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=C, node distance=1.5cm,
+        draw=red2] (M) {};
+        \coursenode M{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=D, node distance=1.5cm,
+        draw=red2] (N) {};
+        \coursenode N{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=D, node distance=1.5cm,
+        draw=red2] (O) {};
+        \coursenode O{\color{red2}C}{\color{skyblue1}H}
+
+        \node[state, minimum size=1cm, below of=E, node distance=1.5cm, draw=butter3] (P) {};
+        \reqnode
+        P{\color{butter3}R}{\color{chocolate1}-}{\color{skyblue1}\merge}{\color{chameleon3}-}
+
+        \node[state, minimum size=1cm, below of=B, node distance=1.5cm, draw=butter3] (Q) {};
+        \reqnode
+        Q{\color{butter3}R}{\color{chocolate1}-}{\color{skyblue1}\merge}{\color{chameleon3}-}
+
+        \path (A) edge (B)
+        edge (E)
+        (Q) edge (L) edge (M)
+        (Q) edge (N) edge (O)
+        (P) edge (H) edge (I)
+        (P) edge (J) edge (K)
+        (E) edge (P)
+        (B) edge (Q);
+      \end{tikzpicture}
+    }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \resizebox{\linewidth}{!}{%
+      \begin{tikzpicture}
+        \node[state, minimum size=1cm, draw=plum2] (A) {};
+        \reqnode
+        A{\color{plum2}D}{\color{chocolate1}T}{\color{skyblue1}{\color{skyblue1}H}}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below right of=A, node distance=2cm,
+        xshift=2cm, draw=butter3] (B) {};
+        \reqnode B{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below left of=A, node distance=2cm,
+        xshift=-2cm, draw=butter3] (E) {};
+        \reqnode E{\color{butter3}R}{\color{chocolate1}T}{\color{skyblue1}H}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below left of=F, node distance=1.5cm,
+        draw=red2] (H) {};
+        \coursenode H{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=F, node distance=1.5cm,
+        draw=red2] (I) {};
+        \coursenode I{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=G, node distance=1.5cm,
+        draw=red2] (J) {};
+        \coursenode J{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=G, node distance=1.5cm,
+        draw=red2] (K) {};
+        \coursenode K{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=C, node distance=1.5cm,
+        draw=red2] (L) {};
+        \coursenode L{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=C, node distance=1.5cm,
+        draw=red2] (M) {};
+        \coursenode M{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=D, node distance=1.5cm,
+        draw=red2] (N) {};
+        \coursenode N{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=D, node distance=1.5cm,
+        draw=red2] (O) {};
+        \coursenode O{\color{red2}C}{\color{skyblue1}H}
+        \node[below of=A, node distance=1.65cm] {\color{chocolate2}\Huge$\merge$};
+
+        \path (A) edge (B)
+        edge (E)
+        (B) edge (L) edge (M)
+        (B) edge (N) edge (O)
+        (E) edge (H) edge (I)
+        (E) edge (J) edge (K);
+      \end{tikzpicture}
+    }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \resizebox{\linewidth}{!}{%
+      \begin{tikzpicture}
+        \node[state, minimum size=1cm, draw=plum2] (A) {};
+        \reqnode
+        A{\color{plum2}D}{\color{chocolate1}T}{\color{skyblue1}{\color{skyblue1}H}}{\color{chameleon3}G}
+        \node[state, minimum size=1cm, below of=A, node distance=1.5cm, draw=butter3] (B) {};
+        \reqnode B{\color{butter3}R}{\color{chocolate1}-}{\color{skyblue1}\merge}{\color{chameleon3}-}
+        \node[state, minimum size=1cm, below left of=F, node distance=1.5cm,
+        draw=red2] (H) {};
+        \coursenode H{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=F, node distance=1.5cm,
+        draw=red2] (I) {};
+        \coursenode I{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=G, node distance=1.5cm,
+        draw=red2] (J) {};
+        \coursenode J{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=G, node distance=1.5cm,
+        draw=red2] (K) {};
+        \coursenode K{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=C, node distance=1.5cm,
+        draw=red2] (L) {};
+        \coursenode L{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=C, node distance=1.5cm,
+        draw=red2] (M) {};
+        \coursenode M{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below left of=D, node distance=1.5cm,
+        draw=red2] (N) {};
+        \coursenode N{\color{red2}C}{\color{skyblue1}H}
+        \node[state, minimum size=1cm, below right of=D, node distance=1.5cm,
+        draw=red2] (O) {};
+        \coursenode O{\color{red2}C}{\color{skyblue1}H}
+
+        \path (A) edge (B)
+        (B) edge (L) edge (M)
+        (B) edge (N) edge (O)
+        (B) edge (H) edge (I)
+        (B) edge (J) edge (K);
+      \end{tikzpicture}
+    }
+  \end{figure}
+\end{frame}
+
+
+\end{document} 

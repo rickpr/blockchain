@@ -1,0 +1,44 @@
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% See the file doc/licenses/LICENSE for more details.
+
+\mode<presentation>
+\usetheme{Madrid}
+\usepackage{stmaryrd}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{pgfplots.polar,graphs,arrows.meta,shapes.geometric,arrows,fit,matrix,positioning,shapes,calc,automata}
+\newcommand*\circled[1]{\tikz[baseline = (char.base)]{
+                \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+\tikzset%
+{%
+  treenode/.style = {circle, draw=black, align=center, minimum size=1cm},
+  subtree/.style  = {isosceles triangle, draw=black, align=center,
+    minimum height=0.5cm, minimum width=1cm, shape border rotate=90,
+    anchor=north},
+  phantom/.style = {}
+}
+\newcommand{\coursenode}[3]{%
+  \draw (#1.0) -- (#1.180);
+  \node at ($ (#1) + (90:0.3cm)$) {$#2$};
+  \node at ($ (#1) + (270:0.3cm)$) {$#3$};
+}
+
+\newcommand{\reqnode}[5]{%
+  \draw (#1.0) -- (#1.180);
+  \draw (#1.270) -- (#1.90);
+  \node at ( $ (#1) + (135:0.3cm)$ ) {$#2$};
+  \node at ( $ (#1) + (45:0.3cm)$ ) {$#3$};
+  \node at ( $ (#1) + (225:0.3cm)$ ) {$#4$};
+  \node at ( $ (#1) + (315:0.3cm)$ ) {$#5$};
+}
+\useoutertheme{infolines}
+\usecolortheme{UNM}
+
+\setbeamerfont{block title}{size={}}
+\setbeamercolor{titlelike}{parent=structure,bg=aluminium3}
+\mode%
+<all>
